@@ -10,10 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import com.toedter.calendar.JCalendar; // Import JCalendar
 
 public class TaskManagerUI extends JFrame {
 
@@ -22,8 +20,6 @@ public class TaskManagerUI extends JFrame {
     public JTextField dataInput;
     public JTextArea taskTextArea;
     public List<Task> tasks;  // Store tasks with details
-    public JCalendar dueDate;
-    
 
     public TaskManagerUI() {
         // Set up the frame
@@ -48,8 +44,6 @@ public class TaskManagerUI extends JFrame {
 
         JPanel inputPanel = new JPanel();
         inputPanel.add(dataInput);
-
-        dueDate = new JCalendar();
         inputPanel.add(addButton);
         inputPanel.add(removeButton);
         inputPanel.add(printTasks);
@@ -83,14 +77,12 @@ public class TaskManagerUI extends JFrame {
     private void addTask() {
         JTextField priorityField = new JTextField();
         JTextField descriptionField = new JTextField();
-
-        // Use the JCalendar for date selection
-        JCalendar dueDateCalendar = new JCalendar();
+        JTextField dueDateField = new JTextField();
 
         Object[] message = {
-            "Priority:", priorityField,
-            "Task Description:", descriptionField,
-            "Due Date:", dueDateCalendar
+                "Priority:", priorityField,
+                "Task Description:", descriptionField,
+                "Due Date:", dueDateField
         };
 
         int option = JOptionPane.showConfirmDialog(this, message, "Add Task", JOptionPane.OK_CANCEL_OPTION);
@@ -98,18 +90,16 @@ public class TaskManagerUI extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             String priority = priorityField.getText();
             String description = descriptionField.getText();
-
-            // Retrieve the selected date from the JCalendar and format it
-            String dueDate = new SimpleDateFormat("yyyy-MM-dd").format(dueDateCalendar.getDate());
+            String dueDate = dueDateField.getText();
 
             // Validate and add the task
-            if (!priority.isEmpty() && !description.isEmpty() && dueDate != null) {
+            if (!priority.isEmpty() && !description.isEmpty() && !dueDate.isEmpty()) {
                 Task task = new Task(priority, description, dueDate);
                 tasks.add(task);
                 updateTaskList();
                 JOptionPane.showMessageDialog(this, "Task added successfully!", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Please fill in all fields and select a due date.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
